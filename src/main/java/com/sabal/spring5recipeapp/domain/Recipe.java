@@ -22,7 +22,7 @@ public class Recipe {
   private String url;
 
   @Lob
-  private String direction;
+  private String directions;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
   private Set<Ingredient> ingredients = new HashSet<>();
@@ -42,7 +42,9 @@ public class Recipe {
 
   public void setNotes(Notes notes) {
     this.notes = notes;
-    notes.setRecipe(this);
+    if (notes != null) {
+      notes.setRecipe(this);
+    }
   }
 
   public Recipe addIngredient(Ingredient ingredient) {

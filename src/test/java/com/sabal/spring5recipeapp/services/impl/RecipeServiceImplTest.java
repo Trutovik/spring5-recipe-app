@@ -1,5 +1,7 @@
 package com.sabal.spring5recipeapp.services.impl;
 
+import com.sabal.spring5recipeapp.converters.RecipeCommandToRecipe;
+import com.sabal.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.sabal.spring5recipeapp.domain.Recipe;
 import com.sabal.spring5recipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,10 +23,31 @@ class RecipeServiceImplTest {
   @Mock
   RecipeRepository recipeRepository;
 
+  @Mock
+  RecipeToRecipeCommand recipeToRecipeCommand;
+
+  @Mock
+  RecipeCommandToRecipe recipeCommandToRecipe;
+
   @BeforeEach
   public void setUp() throws Exception {
-    MockitoAnnotations.initMocks(this);
-    recipeService = new RecipeServiceImpl(recipeRepository);
+    MockitoAnnotations.openMocks(this);
+    recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
+  }
+
+  @Test
+  void getRecipeByIdTest() throws Exception {
+    Recipe recipe = new Recipe();
+    recipe.setId(1L);
+    Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+    when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+    Recipe recipeReturned = recipeService.findById(1L);
+
+    assertNotNull(recipeReturned);
+    verify(recipeRepository, times(1)).findById(anyLong());
+    verify(recipeRepository, never()).findAll();
   }
 
   @Test
