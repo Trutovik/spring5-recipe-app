@@ -3,7 +3,9 @@ package com.sabal.spring5recipeapp.services.impl;
 import com.sabal.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.sabal.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.sabal.spring5recipeapp.domain.Recipe;
+import com.sabal.spring5recipeapp.exceptions.NotFoundException;
 import com.sabal.spring5recipeapp.repositories.RecipeRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -69,4 +71,14 @@ class RecipeServiceImplTest {
 
     verify(recipeRepository, times(1)).deleteById(anyLong());
   }
+
+  @Test
+  public void getRecipeByIdTestNotFound() throws Exception {
+    Assertions.assertThrows(NotFoundException.class, () -> {
+      Optional<Recipe> recipeOptional = Optional.empty();
+      when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+      Recipe recipeReturned = recipeService.findById(1L);
+    });
+  }
+
 }
