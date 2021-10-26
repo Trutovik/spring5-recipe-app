@@ -64,15 +64,4 @@ public class RecipeController {
     modelAndView.addObject("exception", ex);
     return modelAndView;
   }
-
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(NumberFormatException.class)
-  public ModelAndView handleNumberFormatException(Exception ex) {
-    log.error("Wrong id format. It must be a number");
-    log.error(ex.getMessage());
-    ModelAndView modelAndView = new ModelAndView();
-    modelAndView.setViewName("400error");
-    modelAndView.addObject("exception", ex);
-    return modelAndView;
-  }
 }
